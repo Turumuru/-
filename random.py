@@ -3,21 +3,29 @@ import time
 
 class PseudoRandom(object):
     def __init__(self):
-        self.m = 3.56992
-        self.x0 = 0.1
-        self.n = 100 + (int(time.time()) % 1000)
+        self.m = 0.0
+        self.x0 = 0.0
 
     def seed(self):
-        for i in range(0, self.n, 1):
-            self.m = round(self.m + 0.00001, 5)
-            if self.m == 3.81543:
-                self.m = round(self.m + 0.05672, 5)
-            elif self.m == 4.0:
-                self.m = 3.56992
+        n = 100 + int((time.time() % 1) * 100)
+        for i in range(0, n, 1):
+            self.m = self.calc_m()
+            self.x0 = self.calc_x0()
 
-            self.x0 = round(self.x0 + 0.01, 1)
-            if self.x0 == 0.5:
-                self.m = 0.1
+    def calc_m(self):
+        while 1 == 1:
+            m1 = round((time.time() % 0.001) * 10000, 5)
+            if (m1 >= 3.56992) & (m1 < 3.81543):
+                return m1
+
+            if (m1 > 3.87214) & (m1 <= 4.0):
+                return m1
+
+    def calc_x0(self):
+        while 1 == 1:
+            x = round(time.time() % 1, 5)
+            if (x > 0) & (x < 0.5):
+                return x
 
     def random(self):
         self.x0 = self.m * self.x0 * (1 - self.x0)
