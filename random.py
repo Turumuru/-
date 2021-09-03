@@ -6,8 +6,9 @@ class PseudoRandom(object):
         self.m = 0.0
         self.x0 = 0.0
         self.n = 0
+        self.has_seed = False
 
-    def seed(self):
+    def calc_seed(self):
         time_seed = time.time()
         time_entropy_m = int((time_seed % 1) * 1_000)
         time_entropy_x0 = int((time_seed % 1) * 100)
@@ -25,14 +26,15 @@ class PseudoRandom(object):
         # расчёт n
         self.n = 100 + int(time_entropy_n * 100)
 
+        self.has_seed = True
+
     def random(self):
+        if not self.has_seed:
+            Random.calc_seed()
+
         for i in range(self.n):
             self.x0 = self.m * self.x0 * (1 - self.x0)
+
+        self.n = 1
+
         return self.x0
-
-
-Random = PseudoRandom()
-Random.seed()
-randoms = [Random.random() for i in range(10)]
-for num in randoms:
-    print(num)
