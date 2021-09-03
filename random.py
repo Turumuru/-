@@ -33,6 +33,6 @@ class PseudoRandom(object):
 
 Random = PseudoRandom()
 Random.seed()
-randoms = [Random for i in range(10)]
+randoms = [Random.random() for i in range(10)]
 for num in randoms:
     print(num)
