@@ -5,33 +5,34 @@ class PseudoRandom(object):
     def __init__(self):
         self.m = 0.0
         self.x0 = 0.0
+        self.n = 0
 
     def seed(self):
-        n = 100 + int((time.time() % 1) * 100)
-        for i in range(0, n, 1):
-            self.m = self.calc_m()
-            self.x0 = self.calc_x0()
+        time_seed = time.time()
+        time_entropy_m = int((time_seed % 1) * 1_000)
+        time_entropy_x0 = int((time_seed % 1) * 100)
+        time_entropy_n = int((time_seed % 1) * 10)
 
-    def calc_m(self):
-        while 1 == 1:
-            m1 = round((time.time() % 0.001) * 10000, 5)
-            if (m1 >= 3.56992) & (m1 < 3.81543):
-                return m1
+        # расчёт m
+        if time_entropy_m % 2 == 0:
+            self.m = 3.56992 + time_entropy_m % (3.81542 - 3.56992)
+        else:
+            self.m = 3.87215 + time_entropy_m % (4.0 - 3.87215)
 
-            if (m1 > 3.87214) & (m1 <= 4.0):
-                return m1
+        # расчёт x0
+        self.x0 = 0.1 + time_entropy_x0 % (0.4 - 0.1)
 
-    def calc_x0(self):
-        while 1 == 1:
-            x = round(time.time() % 1, 5)
-            if (x > 0) & (x < 0.5):
-                return x
+        # расчёт n
+        self.n = 100 + int(time_entropy_n * 100)
 
     def random(self):
-        self.x0 = self.m * self.x0 * (1 - self.x0)
-        print(self.x0)
+        for i in range(self.n):
+            self.x0 = self.m * self.x0 * (1 - self.x0)
+        return self.x0
 
 
 Random = PseudoRandom()
 Random.seed()
-Random.random()
+randoms = [Random for i in range(10)]
+for num in randoms:
+    print(num)
